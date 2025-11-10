@@ -1,20 +1,42 @@
+package org.example;
+
+import java.util.Random;
+
+/**
+ * Simple utility to simulate biased coin flips.
+ * Provides a method to run a single trial (n flips) and a method
+ * to run multiple trials (m trials) returning the number of heads
+ * per trial.
+ */
 public class Flip {
 
-  public int[] modelFlips(int steps, int trials, int prob) { 
-    int[] positions = new int[trials];
-    for (int i = 0; i < trials; i++){
-      int currentPosition = 0;
-      for(int j = 0; j < steps; j++){
-        int direction = (int) Math.round(Math.random()*1000);
-        if(direction > (prob*1000))
-        if(direction == 0) {
-          currentPosition--;
-        } else {
-          currentPosition++;
+    private final Random rng = new Random();
+
+    /**
+     * Simulate a single trial of n biased coin flips and return number of heads.
+     * @param n number of flips
+     * @param p probability of heads (0.0 - 1.0)
+     * @return number of heads observed
+     */
+    public int simulateHeads(int n, double p) {
+        int heads = 0;
+        for (int i = 0; i < n; i++) {
+            if (rng.nextDouble() < p) {
+                heads++;
+            }
         }
-      }
-      positions[i] = currentPosition;
+        return heads;
     }
-    return positions;
-  }
+
+    /**
+     * Run m independent trials of n flips with probability p and return an array
+     * with the head counts for each trial.
+     */
+    public int[] runTrials(int n, int m, double p) {
+        int[] results = new int[m];
+        for (int t = 0; t < m; t++) {
+            results[t] = simulateHeads(n, p);
+        }
+        return results;
+    }
 }
